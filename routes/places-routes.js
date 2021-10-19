@@ -21,20 +21,7 @@ router.post("/", (req, res, next) => {
   return res.json({ message: "good" });
 });
 
-router.get("/:pid", (req, res, next) => {
-  console.log("GET Request in Places");
-  const placeID = req.params.pid; //{pid:p1}
-  const place = DUMMY_PLACES.find((p) => {
-    return p.id == placeID;
-  });
-  if (!place) {
-    throw new HttpError("not found place id", 404);
-    // error.code = 404;
-    // throw error;
-    // return res.status(404).json({ message: "not found place" });
-  }
-  return res.json({ place }); //==>{place}=>{place:place}
-});
+router.get("/:pid",
 router.get("user/:Cid", (req, res, next) => {
   console.log("GET Request in Places");
   const creatorID = req.params.Cid;
