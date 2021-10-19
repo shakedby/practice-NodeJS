@@ -12,3 +12,7 @@ const getPlaceById = (req, res, next) => {
   }
   return res.json({ place }); //==>{place}=>{place:place}
 };
+
+//two option:
+//1. function getPlaceById() {...}
+//2. const getPlaceById= function(){...}///the best
