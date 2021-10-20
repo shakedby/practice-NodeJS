@@ -9,7 +9,7 @@ router.post("/", (req, res, next) => {
 });
 
 router.get("/:pid", placesControllers.getPlaceById);
-router.get("/user/:uid", placesControllers.getPlaceByUserId);
+router.get("/user/:uid", placesControllers.getPlacesByUserId);
 router.post("/addplace", placesControllers.createPlace);
 router.patch("/:pid", placesControllers.updatePlaceById);
 router.delete("/:pid", placesControllers.deletePlaceById);

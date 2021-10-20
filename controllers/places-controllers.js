@@ -2,7 +2,7 @@ const uuid = require("uuid");
 
 const HttpError = require("../models/http-error");
 
-const DUMMY_PLACES = [
+let DUMMY_PLACES = [
   {
     id: "p1",
     title: "Empire State Building",
@@ -35,19 +35,19 @@ const getPlaceById = (req, res, next) => {
 //1. function getPlaceById() {...}
 //2. const getPlaceById= function(){...}///the best
 
-const getPlaceByUserId = (req, res, next) => {
+const getPlacesByUserId = (req, res, next) => {
   console.log("GET Request in Places2");
   const userId = req.params.uid;
-  const place = DUMMY_PLACES.find((p) => {
+  const places = DUMMY_PLACES.filter((p) => {
     return p.creator === userId;
   });
-  if (!place) {
+  if (!places || places.length === 0) {
     return next(
       new HttpError("Could not find a place for the provided user id.", 404)
     );
   }
 
-  res.json({ place });
+  res.json({ places });
 };
 
 const createPlace = (req, res, next) => {
@@ -66,10 +66,22 @@ const createPlace = (req, res, next) => {
 };
 const updatePlaceById = (req, res, next) => {
   const { title, description } = req.body;
-};
-const deletePlaceById = (req, res, next) => {};
+  const placeId = req.params.pid;
+  const updatedPlace = { ...DUMMY_PLACES.find((p) => p.id === placeId) }; //{...-create new object with the all data from the old object-copy}
+  const placeIndex = DUMMY_PLACES.findIndex((p) => p.id === placeId);
+  updatedPlace.title = title;
+  updatedPlace.description = description;
+  DUMMY_PLACES[placeIndex] = updatedPlace;
 
-exports.getPlaceByUserId = getPlaceByUserId;
+  res.status(200).json({ place: updatedPlace });
+};
+const deletePlaceById = (req, res, next) => {
+  const placeId = req.params.pid;
+  DUMMY_PLACES = DUMMY_PLACES.filter((p) => p.id !== placeId);
+  return res.status(200).json({ message: "place deleted" });
+};
+
+exports.getPlacesByUserId = getPlacesByUserId;
 exports.getPlaceById = getPlaceById;
 exports.createPlace = createPlace;
 exports.updatePlaceById = updatePlaceById;
