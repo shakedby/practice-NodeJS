@@ -52,7 +52,10 @@ const getPlacesByUserId = (req, res, next) => {
 
 const createPlace = (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) throw new HttpError("invalid inputs", 422);
+  if (!errors.isEmpty()) {
+    //console.log(errors);
+    throw new HttpError("invalid inputs", 422);
+  }
   const { title, description, coordinates, address, creator } = req.body;
   //instead do it:const title=req.body.title;
   const createdPlace = {
@@ -67,6 +70,11 @@ const createPlace = (req, res, next) => {
   return res.status(201).json({ place: createdPlace });
 };
 const updatePlaceById = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    //console.log(errors);
+    throw new HttpError("invalid inputs", 422);
+  }
   const { title, description } = req.body;
   const placeId = req.params.pid;
   const updatedPlace = { ...DUMMY_PLACES.find((p) => p.id === placeId) }; //{...-create new object with the all data from the old object-copy}
@@ -79,6 +87,10 @@ const updatePlaceById = (req, res, next) => {
 };
 const deletePlaceById = (req, res, next) => {
   const placeId = req.params.pid;
+  if (!DUMMY_PLACES.find((p) => p.id === placeId)) {
+    throw new HttpError("could not find a place for that id.", 404);
+  }
+
   DUMMY_PLACES = DUMMY_PLACES.filter((p) => p.id !== placeId);
   return res.status(200).json({ message: "place deleted" });
 };
